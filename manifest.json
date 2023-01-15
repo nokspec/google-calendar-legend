@@ -1,17 +1,28 @@
 {
-  "manifest_version": 3,
-  "name": "Google Calendar Legend",
-  "description": "Google Calendar Legend",
-  "permissions": ["storage"],
-  "version": "0.1",
-  "action": {
-      "default_popup": "popup.html",
-      "default_icon": "pic.png"
-  },
-  "content_scripts": [
-      {
-          "matches": ["*://calendar.google.com/*"],
-          "js": ["background.js", "config.js"]
-      }
-  ]
+    "manifest_version": 3,
+    "name": "Google Calendar Legend",
+    "description": "Google Calendar Legend",
+    "permissions": [
+        "storage",
+        "scripting"
+    ],
+    "version": "0.1",
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "pic.png"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "js": ["config.js"],
+            "matches": ["*://calendar.google.com/*"]
+        },
+        {
+            "run_at": "document_idle",
+            "js": ["initialize.js"],
+            "matches": ["*://calendar.google.com/*"]
+        } 
+    ]
 }

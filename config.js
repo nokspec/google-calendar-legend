@@ -1,51 +1,103 @@
-var numFields;
+var data = []; //data storage, legendname, legendcolor
+var numFields = 0;
 
-// retrieve the stored data when the popup is opened
-var numFields;
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('add').addEventListener("click", addInput);
+    document.getElementById('save').addEventListener("click", saveData);
+    document.getElementById('clear').addEventListener("click", clearData);
+});
 
-// retrieve the stored data when the popup is opened
-window.onload = function () {
-    chrome.storage.local.get("numFields", function (items) {
-        if (items.numFields) {
-            numFields = items.numFields;
-            for (var i = 0; i < numFields; i++) {
-                chrome.storage.local.get("input" + i, function (items) {
-                    var inputValue = items["input" + i];
-                });
-                chrome.storage.local.get("color" + i, function (items) {
-                    var colorValue = items["color" + i];
-                });
-                var legendName = '<p>Legend Name <input type="text" id="input' + i + '" name="input' + i + '" value="' + inputValue + '"/> ';
-                var legendLabel = '<label for="legendcolor">Choose color: </label> <select id="color' + i + '" value="' + colorValue + '"> '
-                var legendColor = '<option id="tomato">Tomato</option> <option id="flamingo">Flamingo</option> <option id="tangerine">Tangerine</option> <option id="sage">Sage</option> <option id="basil">Basil</option> <option id="peacock">Peacock</option> <option id="blueberry">Blueberry</option> <option id="lavender">Lavender</option> <option id="grape">Grape</option> <option id="graphite">Graphite</option>  </select> </p> <br>';
-                document.getElementById('config').innerHTML += legendName += legendLabel += legendColor;
-            }
-        } else {
-            numFields = 0;
+//clear all the data
+function clearData() {
+    chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
+        if (bytesInUse > 0) {
+            chrome.storage.local.clear();
         }
     });
+    //remove all fields
+    var config = document.getElementById("config");
+    while (config.firstChild) {
+        config.removeChild(config.firstChild);
+    }
+    //reset field count
+    numFields = 0;
+
+    console.log("Data cleared!");
+    console.log(data);
 }
 
-
-document.getElementById('add').addEventListener("click", addInput);
-
+//add a field
 function addInput() {
-    var legendName = '<p>Legend Name <input type="text" id="input' + numFields + '" name="input' + numFields + '"/> ';
-    var legendLabel = '<label for="legendcolor">Choose color: </label> <select id="color' + numFields + '"> '
-    var legendColor = '<option id="tomato">Tomato</option> <option id="flamingo">Flamingo</option> <option id="tangerine">Tangerine</option> <option id="sage">Sage</option> <option id="basil">Basil</option> <option id="peacock">Peacock</option> <option id="blueberry">Blueberry</option> <option id="lavender">Lavender</option> <option id="grape">Grape</option> <option id="graphite">Graphite</option>  </select> </p> <br>';
-    document.getElementById('config').innerHTML += legendName += legendLabel += legendColor;
+    var legendName = document.createElement('p');
+    var legendLabel = document.createElement('label');
+    var legendColor = document.createElement('select');
+    var input = document.createElement('input');
+    input.type = "text";
+    input.id = "input" + numFields;
+    input.name = "input" + numFields;
+    legendName.innerHTML = "Legend Name ";
+    legendName.appendChild(input);
+    legendLabel.innerHTML = "Choose color: ";
+    legendLabel.for = "legendcolor";
+    legendLabel.appendChild(legendColor);
+    legendColor.id = "color" + numFields;
+    var options = ["Tomato", "Flamingo", "Tangerine", "Sage", "Basil", "Peacock", "Blueberry", "Lavender", "Grape", "Graphite"];
+    for (var i = 0; i < options.length; i++) {
+        var option = document.createElement("option");
+        option.innerHTML = options[i];
+        legendColor.appendChild(option);
+    }
+    document.getElementById('config').appendChild(legendName);
+    document.getElementById('config').appendChild(legendLabel);
+
     numFields++;
     console.log("Added!");
 }
 
-document.getElementById('save').addEventListener("click", saveData);
-
+//save data
 function saveData() {
-    let data = {};
-    for (var i = 0; i < numFields; i++) {
-        var name = document.getElementById("input" + i).value;
-        var color = document.getElementById("color" + i).value;
-        data["input" + i] = name;
-        data["color" + i] = color;
+    let fieldcount = numFields;
+    console.log("fieldcount: " + fieldcount);
+   
+    for (let i = 0; i <= fieldcount - 1; i++) {
+        var { lName, lColor } = {
+            lName: document.getElementById('input' + i).value,
+            lColor: document.getElementById('color' + i).value
+        };
+        data.push({ lName, lColor });
+    }
+    //clear previous saved data before saving new
+    chrome.storage.local.clear();
+    //save data
+    chrome.storage.sync.set({data}, function () {
+        if (chrome.runtime.error) {
+            console.log("Runtime error.");
+        }
+        else console.log("Succesfully saved!");
+    });
+    console.log("data length: " + data.length);
+}
+
+//load everything when popup gets opened
+document.body.onload = function () {
+    chrome.storage.sync.get("data", function (items) {
+        if (!chrome.runtime.error) {
+            let data = items.data;
+            for (let i = 0; i < data.length; i++) {
+                addInput();
+            }
+            fillExistingData(data);
+
+            console.log("onload length: " + data.length);
+            console.log("Data: ")
+            console.log(items);
+        }
+    });
+}
+
+function fillExistingData(data) {
+    for(let i = 0; i < data.length; i++) {
+        document.getElementById('input'+ i).value = data[i].lName;
+        document.getElementById('color'+ i).value = data[i].lColor;
     }
 }
