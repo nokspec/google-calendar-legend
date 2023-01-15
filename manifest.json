@@ -2,16 +2,16 @@
   "manifest_version": 3,
   "name": "Google Calendar Legend",
   "description": "Google Calendar Legend",
-  "permissions": ["tabs", "*://calendar.google.com/*"],
-  "version": "1.0",
-  "browser_action": {
+  "permissions": ["storage"],
+  "version": "0.1",
+  "action": {
       "default_popup": "popup.html",
       "default_icon": "pic.png"
   },
   "content_scripts": [
       {
           "matches": ["*://calendar.google.com/*"],
-          "js": ["background.js"]
+          "js": ["background.js", "config.js"]
       }
   ]
 }
