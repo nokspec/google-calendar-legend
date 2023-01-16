@@ -4,7 +4,8 @@
     "description": "Google Calendar Legend",
     "permissions": [
         "storage",
-        "scripting"
+        "scripting",
+        "tabs"
     ],
     "version": "0.1",
     "action": {

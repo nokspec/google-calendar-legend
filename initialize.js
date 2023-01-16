@@ -29,23 +29,18 @@ async function getData() {
             }
         });
     });
-    console.log(data1);
-
     createDivs(data1);
     return data1;
 }
 
 // Function to create new divs
 function createDivs(data) {
-    console.log("currentdata ");
-    console.log(data);
-    
     for (let i = 0; i < data.length; i++) {
         let legendname = data[i].lName;
         let legendcolor = data[i].lColor;
 
         // Create a new div
-        let newDiv = document.createElement("div");
+        let newDiv = document.createElement(`div`);
         // Set the innerHTML of the div
         newDiv.innerHTML = `<p>${legendname} <span style="background-color: ${legendcolor}; width: 17px; display: inline-block;">&nbsp;</span></p>`;
         // Append the new div to the element with class qOsM1d wBon4c

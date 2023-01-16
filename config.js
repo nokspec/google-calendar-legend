@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('clear').addEventListener("click", clearData);
 });
 
+
 //clear all the data
 function clearData() {
     chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
@@ -45,26 +46,24 @@ function addInput() {
     for (var i = 0; i < options.length; i++) {
         var option = document.createElement("option");
         option.innerHTML = options[i];
-        legendColor.appendChild(option);
+            legendColor.appendChild(option);
     }
+    console.log(legendName);    
     document.getElementById('config').appendChild(legendName);
     document.getElementById('config').appendChild(legendLabel);
 
     numFields++;
-    console.log("Added!");
 }
 
 //save data
 function saveData() {
-    let fieldcount = numFields;
-    console.log("fieldcount: " + fieldcount);
-   
+    let fieldcount = numFields;   
     for (let i = 0; i <= fieldcount - 1; i++) {
         var { lName, lColor } = {
             lName: document.getElementById('input' + i).value,
             lColor: document.getElementById('color' + i).value
         };
-        data.push({ lName, lColor });
+        data.push({lName, lColor});
     }
     //clear previous saved data before saving new
     chrome.storage.local.clear();
@@ -75,7 +74,6 @@ function saveData() {
         }
         else console.log("Succesfully saved!");
     });
-    console.log("data length: " + data.length);
 }
 
 //load everything when popup gets opened
@@ -87,14 +85,11 @@ document.body.onload = function () {
                 addInput();
             }
             fillExistingData(data);
-
-            console.log("onload length: " + data.length);
-            console.log("Data: ")
-            console.log(items);
         }
     });
 }
 
+//makes sure saved fields contain their data
 function fillExistingData(data) {
     for(let i = 0; i < data.length; i++) {
         if(data[i] != null){
