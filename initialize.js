@@ -18,15 +18,39 @@ var observer2 = new MutationObserver(function (mutations) {
 
 observer2.observe(document, { childList: true, subtree: true });
 
-var newDiv = document.querySelector("div.qOsM1d.wBon4c");
-if (newDiv) {
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "20");
-    svg.setAttribute("height", "20");
-    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("width", "20");
-    rect.setAttribute("height", "20");
-    rect.setAttribute("style", "fill:#E9E612;stroke-width:3;stroke:rgb(0,0,0)");
-    svg.appendChild(rect);
-    newDiv.appendChild(svg);
+getData();
+
+async function getData() {
+    let data1 = await new Promise(resolve => {
+        chrome.storage.sync.get("data", function (items) {
+            if (!chrome.runtime.error) {
+                resolve(items.data);
+                
+            }
+        });
+    });
+    console.log(data1);
+
+    createDivs(data1);
+    return data1;
 }
+
+// Function to create new divs
+function createDivs(data) {
+    console.log("currentdata ");
+    console.log(data);
+    
+    for (let i = 0; i < data.length; i++) {
+        let legendname = data[i].lName;
+        let legendcolor = data[i].lColor;
+
+        // Create a new div
+        let newDiv = document.createElement("div");
+        // Set the innerHTML of the div
+        newDiv.innerHTML = `<p>${legendname} <span style="background-color: ${legendcolor}; width: 17px; display: inline-block;">&nbsp;</span></p>`;
+        // Append the new div to the element with class qOsM1d wBon4c
+        document.querySelector(".qOsM1d.wBon4c").appendChild(newDiv);
+    }
+}
+
+

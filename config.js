@@ -97,7 +97,9 @@ document.body.onload = function () {
 
 function fillExistingData(data) {
     for(let i = 0; i < data.length; i++) {
-        document.getElementById('input'+ i).value = data[i].lName;
-        document.getElementById('color'+ i).value = data[i].lColor;
+        if(data[i] != null){
+            document.getElementById('input'+ i).value = data[i].lName;
+            document.getElementById('color'+ i).value = data[i].lColor;
+        }  
     }
 }
