@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //clear all the data
 function clearData() {
-    chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
+    chrome.storage.local.getBytesInUse(null, function (bytesInUse) {
         if (bytesInUse > 0) {
             chrome.storage.local.clear();
         }
@@ -43,12 +43,15 @@ function addInput() {
     legendLabel.appendChild(legendColor);
     legendColor.id = "color" + numFields;
     var options = ["Tomato", "Flamingo", "Tangerine", "Sage", "Basil", "Peacock", "Blueberry", "Lavender", "Grape", "Graphite"];
+    var colors = ["#ff6347", "#ffa07a", "#ffa500", "#708090", "#008080", "#6a5acd", "#87cefa", "#e6e6fa", "#8a2be2", "#a9a9a9"];
+
     for (var i = 0; i < options.length; i++) {
-        var option = document.createElement("option");
+        var option = document.createElement('option');
         option.innerHTML = options[i];
-            legendColor.appendChild(option);
+        option.style.backgroundColor = colors[i];
+        legendColor.appendChild(option);
     }
-    console.log(legendName);    
+    console.log(legendName);
     document.getElementById('config').appendChild(legendName);
     document.getElementById('config').appendChild(legendLabel);
 
@@ -57,23 +60,24 @@ function addInput() {
 
 //save data
 function saveData() {
-    let fieldcount = numFields;   
+    let fieldcount = numFields;
     for (let i = 0; i <= fieldcount - 1; i++) {
         var { lName, lColor } = {
             lName: document.getElementById('input' + i).value,
             lColor: document.getElementById('color' + i).value
         };
-        data.push({lName, lColor});
+        data.push({ lName, lColor });
     }
     //clear previous saved data before saving new
     chrome.storage.local.clear();
     //save data
-    chrome.storage.sync.set({data}, function () {
+    chrome.storage.sync.set({ data }, function () {
         if (chrome.runtime.error) {
             console.log("Runtime error.");
         }
         else console.log("Succesfully saved!");
     });
+    chrome.tabs.reload();
 }
 
 //load everything when popup gets opened
@@ -91,10 +95,10 @@ document.body.onload = function () {
 
 //makes sure saved fields contain their data
 function fillExistingData(data) {
-    for(let i = 0; i < data.length; i++) {
-        if(data[i] != null){
-            document.getElementById('input'+ i).value = data[i].lName;
-            document.getElementById('color'+ i).value = data[i].lColor;
-        }  
+    for (let i = 0; i < data.length; i++) {
+        if (data[i] != null) {
+            document.getElementById('input' + i).value = data[i].lName;
+            document.getElementById('color' + i).value = data[i].lColor;
+        }
     }
 }
