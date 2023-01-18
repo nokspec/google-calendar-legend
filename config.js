@@ -30,12 +30,11 @@ function clearData() {
 }
 
 function removeLastField() {
-    var config = document.querySelectorAll("config");
-    while(config.lastChild) {
+    var config = document.getElementById("config");
+    for(let i = 0;i < 2; i++) {
         config.removeChild(config.lastChild);
     }
-
-    numfields = numFields - 1;
+    numFields = numFields - 1;
 }
 
 //add a field
