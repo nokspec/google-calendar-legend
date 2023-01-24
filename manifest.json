@@ -12,9 +12,6 @@
         "default_popup": "popup.html",
         "default_icon": "pic.png"
     },
-    "background": {
-        "service_worker": "background.js"
-    },
     "content_scripts": [
         {
             "js": ["config.js"],
