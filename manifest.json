@@ -7,7 +7,7 @@
         "scripting",
         "tabs"
     ],
-    "version": "0.1",
+    "version": "0.2",
     "action": {
         "default_popup": "popup.html",
         "default_icon": "pic.png"
