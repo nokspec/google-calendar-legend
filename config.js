@@ -1,14 +1,18 @@
-var data = []; //data storage, legendname, legendcolor
+var data = []; //data storage; legendname, legendcolor
 var numFields = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('add').addEventListener("click", addInput);
     document.getElementById('save').addEventListener("click", saveData);
+    document.getElementById('newsection').addEventListener("click", addSection)
     document.getElementById('clear').addEventListener("click", clearData);
     document.getElementById('delete').addEventListener("click", removeLastField);
 
 });
 
+function addSection() {
+    document.body.style.width = "400px";
+}
 
 //clear all the data
 function clearData() {
@@ -46,12 +50,14 @@ function addInput() {
     input.type = "text";
     input.id = "input" + numFields;
     input.name = "input" + numFields;
+    input.style.width="100px";
     legendName.innerHTML = "Legend Name ";
     legendName.appendChild(input);
     legendLabel.innerHTML = "Choose color: ";
     legendLabel.for = "legendcolor";
     legendLabel.appendChild(legendColor);
     legendColor.id = "color" + numFields;
+    legendColor.style.width="100px";
     var options = ["Tomato", "Flamingo", "Tangerine", "Sage", "Basil", "Peacock", "Blueberry", "Lavender", "Grape", "Graphite"];
     var colors = ["#d50000", "#e67c73", "#f4511e", "#33b679", "#0a8043", "#326872", "#4050b5", "#7886cb", "#8e24aa", "#616161"];
 
